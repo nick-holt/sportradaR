@@ -45,7 +45,7 @@ getGolfTournamentSchedule <- function(tour = "pga", year = "2018"){
 }
 
 # function to get leaderboard for a given tournament
-getGolfTournamentLeaderboard <- function(id, year) {
+getGolfTournamentLeaderboard <- function(id, year, tour = "pga") {
         start_url <- paste0("http://api.sportradar.us/golf-", access_level, "2", "/leaderboard/", tour,"/", year, "/tournaments/", id, "/leaderboard.json?api_key=", golf_key)
         targetJSON <- getURL(start_url)
         target <- fromJSON(targetJSON)
@@ -65,6 +65,11 @@ getGolfTournamentLeaderboard <- function(id, year) {
         player_rounds <- data.frame(player_rounds)
         colnames(player_rounds) <- str_c("round_", colnames(player_rounds), "_strokes")
         target_df <- cbind(df %>% select(-rounds), player_rounds)
+        target_df <- target_df %>%
+                mutate(tourn_id = id,
+                       tourn_year = year,
+                       tourn_tour = tour) %>%
+                select(tourn_id, tourn_year, tourn_tour, everything())
         return(target_df)
 }
 
