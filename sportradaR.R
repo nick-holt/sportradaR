@@ -65,13 +65,13 @@ getGolfTournamentLeaderboard <- function(id, year, tour = "pga") {
         player_rounds <- data.frame(player_rounds)
         colnames(player_rounds) <- str_c("round_", colnames(player_rounds), "_strokes")
         target_df <- cbind(df %>% select(-rounds), player_rounds)
+        colnames(target_df)[which(colnames(target_df)=="id")] <- "player_id"
+        tourn_id <- id
         target_df <- target_df %>%
-                mutate(tourn_id = id,
+                mutate(tourn_id = tourn_id,
                        tourn_year = year,
                        tourn_tour = tour) %>%
                 select(tourn_id, tourn_year, tourn_tour, everything())
         return(target_df)
 }
-
-
 
